@@ -31,10 +31,7 @@ data = {
 	"equipamiento_plantilla": 500,
 	"equipamiento_lista_inicial": 100,
 	"ejercicio_en_curso": 1000,
-	"serie": 3000,
-	"repeticiones": 1000,
-	"cronometrado": 1000,
-	"cardio": 1000
+	"serie": 3000
 }
 
 inserts.insert_data(conn, cur, data)

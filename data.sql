@@ -1,4 +1,4 @@
-CREATE TYPE tipo_ejercicio AS ENUM ('Repeticiones', 'Cronometrado', 'Cardio');
+CREATE TYPE tipo_ejercicio AS ENUM ('repeticiones', 'cronometrado', 'cardio');
 
 CREATE TABLE IF NOT EXISTS usuario (
 	email VARCHAR(255) PRIMARY KEY NOT NULL,

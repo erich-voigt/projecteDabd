@@ -18,7 +18,7 @@ def insert_plantilla_ejercicio(conn, cur, quantity):
 		id = fake.uuid4()
 		nombre = fake.word()
 		instrucciones = fake.sentence()
-		tipo = choice(["Repeticiones", "Cronometrado", "Cardio"])
+		tipo = choice(["repeticiones", "cronometrado", "cardio"])
 		cur.execute("INSERT INTO plantilla_ejercicio VALUES ('%s', '%s', '%s', '%s', '%s')" % (id, nombre, instrucciones, tipo, email))
 	conn.commit()
 
@@ -27,7 +27,7 @@ def insert_lista_inicial_plantilla_ejercicio(conn, cur, quantity):
 		id = fake.uuid4()
 		nombre = fake.word()
 		instrucciones = fake.sentence()
-		tipo = choice(["Repeticiones", "Cronometrado", "Cardio"])
+		tipo = choice(["repeticiones", "cronometrado", "cardio"])
 		cur.execute("INSERT INTO lista_inicial_plantilla_ejercicio VALUES ('%s', '%s', '%s', '%s')" % (id, nombre, instrucciones, tipo))
 	conn.commit()
 
@@ -109,7 +109,7 @@ def insert_serie(conn, cur, quantity):
 
 def insert_repeticiones(conn, cur, quantity):
 	for _ in range(quantity):
-		cur.execute("SELECT id FROM serie WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) ORDER BY RANDOM() LIMIT 1")
+		cur.execute("SELECT serie.id FROM serie JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id JOIN plantilla_ejercicio ON ejercicio_en_curso.plantilla = plantilla_ejercicio.id WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) AND plantilla_ejercicio.tipo = 'repeticiones' ORDER BY RANDOM() LIMIT 1")
 		id = cur.fetchone()[0]
 		peso = randint(1, 200)
 		repeticiones = randint(1, 200)
@@ -118,7 +118,7 @@ def insert_repeticiones(conn, cur, quantity):
 
 def insert_cronometrado(conn, cur, quantity):
 	for _ in range(quantity):
-		cur.execute("SELECT id FROM serie WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) ORDER BY RANDOM() LIMIT 1")
+		cur.execute("SELECT serie.id FROM serie JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id JOIN plantilla_ejercicio ON ejercicio_en_curso.plantilla = plantilla_ejercicio.id WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) AND plantilla_ejercicio.tipo = 'cronometrado' ORDER BY RANDOM() LIMIT 1")
 		id = cur.fetchone()[0]
 		peso = randint(1, 200)
 		tiempo = randint(1, 200)
@@ -127,7 +127,7 @@ def insert_cronometrado(conn, cur, quantity):
 
 def insert_cardio(conn, cur, quantity):
 	for _ in range(quantity):
-		cur.execute("SELECT id FROM serie WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) ORDER BY RANDOM() LIMIT 1")
+		cur.execute("SELECT serie.id FROM serie JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id JOIN plantilla_ejercicio ON ejercicio_en_curso.plantilla = plantilla_ejercicio.id WHERE NOT EXISTS (SELECT 1 FROM repeticiones WHERE serie.id = repeticiones.serie) AND NOT EXISTS (SELECT 1 FROM cronometrado WHERE serie.id = cronometrado.serie) AND NOT EXISTS (SELECT 1 FROM cardio WHERE serie.id = cardio.serie) AND plantilla_ejercicio.tipo = 'cardio' ORDER BY RANDOM() LIMIT 1")
 		id = cur.fetchone()[0]
 		distancia = randint(1, 200)
 		tiempo = randint(1, 200)
@@ -159,9 +159,39 @@ def insert_data(conn, cur, data):
 	print(f"Inserted {data["ejercicio_en_curso"]} Elements In Table 'ejercicio_en_curso'")
 	insert_serie(conn, cur, data["serie"])
 	print(f"Inserted {data["serie"]} Elements In Table 'serie'")
-	insert_repeticiones(conn, cur, data["repeticiones"])
+
+	cur.execute("""
+		SELECT COUNT(serie.id) FROM serie
+		JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id
+		JOIN plantilla_ejercicio ON plantilla_ejercicio.id = ejercicio_en_curso.plantilla
+		WHERE plantilla_ejercicio.tipo = 'repeticiones'
+	""")
+	count = cur.fetchone()[0]
+	data["repeticiones"] = count
+
+	insert_repeticiones(conn, cur, count)
 	print(f"Inserted {data["repeticiones"]} Elements In Table 'repeticiones'")
-	insert_cronometrado(conn, cur, data["cronometrado"])
+
+	cur.execute("""
+		SELECT COUNT(serie.id) FROM serie
+		JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id
+		JOIN plantilla_ejercicio ON plantilla_ejercicio.id = ejercicio_en_curso.plantilla
+		WHERE plantilla_ejercicio.tipo = 'cronometrado'
+	""")
+	count = cur.fetchone()[0]
+	data["cronometrado"] = count
+
+	insert_cronometrado(conn, cur, count)
 	print(f"Inserted {data["cronometrado"]} Elements In Table 'cronometrado'")
-	insert_cardio(conn, cur, data["cardio"])
+
+	cur.execute("""
+		SELECT COUNT(serie.id) FROM serie
+		JOIN ejercicio_en_curso ON serie.ejercicio = ejercicio_en_curso.id
+		JOIN plantilla_ejercicio ON plantilla_ejercicio.id = ejercicio_en_curso.plantilla
+		WHERE plantilla_ejercicio.tipo = 'cardio'
+	""")
+	count = cur.fetchone()[0]
+	data["cardio"] = count
+
+	insert_cardio(conn, cur, count)
 	print(f"Inserted {data["cardio"]} Elements In Table 'cardio'")
