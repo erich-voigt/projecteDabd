@@ -1,6 +1,9 @@
 {
 	"ts-node": {
-		"files": true
+		"files": true,
+		"require": [
+			"tsconfig-paths/register"
+		]
 	},
 	"compilerOptions": {
 		"target": "ES2022",
@@ -14,6 +17,7 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"skipLibCheck": true,
+		"moduleResolution": "node",
 		"baseUrl": ".",
 		"paths": {
 			"@/*": [

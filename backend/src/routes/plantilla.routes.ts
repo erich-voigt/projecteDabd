@@ -1,15 +1,17 @@
-import { Router } from "express";
+import {Router} from "express";
+
+import * as plantillaController from "@/controllers/plantilla.controller";
 
 const router = Router();
 
-router.get("/");
+router.get("/", plantillaController.getPlantillas);
 
-router.get("/:id");
+router.get("/:id", plantillaController.getPlantilla);
 
-router.post("/");
+router.post("/", plantillaController.createPlantilla);
 
-router.put("/");
+router.put("/", plantillaController.updatePlantilla);
 
-router.delete("/");
+router.delete("/", plantillaController.deletePlantilla);
 
 export default router;

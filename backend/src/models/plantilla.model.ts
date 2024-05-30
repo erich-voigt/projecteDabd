@@ -1,15 +1,24 @@
-import connection from "@/config/database";
-import { eq } from 'drizzle-orm';
-import { pgTable, varchar } from "drizzle-orm/pg-core";
+import {ejercicio} from "@/models/ejercicio.model";
+import {usuario} from "@/models/usuario.model";
+import {relations} from "drizzle-orm";
+import {pgEnum, pgTable, uuid, varchar} from "drizzle-orm/pg-core";
 
-const doSomething = async () => {
-	const db = await connection;
-	console.log(await db.select({mail: usuario.contrasenya}).from(usuario).where(eq(usuario.email, "brosado@example.org")));
-};
+export const tipoEjercicioEnum = pgEnum("tipo_ejercicio", ["repeticiones", "cronometrado", "cardio"]);
 
-doSomething();
-
-export const usuario = pgTable("usuario", {
-	email: varchar("email", { length: 255 }).primaryKey().notNull(),
-	contrasenya: varchar("contrasenya", { length: 255 }).notNull(),
+export const plantilla = pgTable("plantilla_ejercicio", {
+	id: uuid("id").primaryKey().notNull(),
+	nombre: varchar("nombre", {length: 255}).notNull(),
+	instrucciones: varchar("instrucciones", {length: 2048}).notNull(),
+	tipo: tipoEjercicioEnum("tipo").notNull(),
+	usuario: varchar("usuario", {length: 255})
+		.notNull()
+		.references(() => usuario.email)
 });
+
+export const plantillaRelations = relations(plantilla, ({one, many}) => ({
+	usuario: one(usuario, {
+		fields: [plantilla.usuario],
+		references: [usuario.email]
+	}),
+	ejercicios: many(ejercicio)
+}));
