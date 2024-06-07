@@ -6,7 +6,7 @@ import {date, pgTable, uuid, varchar} from "drizzle-orm/pg-core";
 export const entrenamiento = pgTable("entrenamiento", {
 	id: uuid("id").primaryKey().notNull(),
 	fecha_inicio: date("fecha_inicio").notNull(),
-	fecha_fin: date("fecha_fin").notNull(),
+	fecha_fin: date("fecha_fin"),
 	usuario: varchar("usuario", {length: 255})
 		.notNull()
 		.references(() => usuario.email)

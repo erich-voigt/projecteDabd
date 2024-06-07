@@ -1,15 +1,17 @@
 import {Router} from "express";
 
+import * as entrenamientoController from "@/controllers/entrenamiento.controller";
+
 const router = Router();
 
-router.get("/");
+router.get("/", entrenamientoController.getEntrenamientos);
 
-router.get("/:id");
+router.get("/:id", entrenamientoController.getEntrenamiento);
 
-router.post("/");
+router.post("/", entrenamientoController.createEntrenamiento);
 
-router.put("/");
+router.put("/", entrenamientoController.updateEntrenamiento);
 
-router.delete("/");
+router.delete("/", entrenamientoController.deleteEntrenamiento);
 
 export default router;

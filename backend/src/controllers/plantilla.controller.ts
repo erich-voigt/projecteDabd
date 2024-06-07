@@ -16,6 +16,7 @@ export const getPlantilla = async (req: Request, res: Response) => {
 		const id = req.params.id as string;
 		const email = req.query.email as string;
 		if (!email) return res.status(400).json({message: "email is required"});
+		else if (!id) return res.status(400).json({message: "id is required"});
 		return res.status(200).json(await plantillaService.getPlantilla(id, email));
 	} catch (error) {
 		return res.status(500).json({message: error});
