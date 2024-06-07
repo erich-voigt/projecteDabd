@@ -1,15 +1,17 @@
 import {Router} from "express";
 
+import * as ejercicioController from "@/controllers/ejercicio.controller";
+
 const router = Router();
 
-router.get("/");
+router.get("/", ejercicioController.getEjercicios);
 
-router.get("/:id");
+router.get("/:id", ejercicioController.getEjercicio);
 
-router.post("/");
+router.post("/", ejercicioController.createEjercicio);
 
-router.put("/");
+router.put("/", ejercicioController.updateEjercicio);
 
-router.delete("/");
+router.delete("/", ejercicioController.deleteEjercicio);
 
 export default router;
