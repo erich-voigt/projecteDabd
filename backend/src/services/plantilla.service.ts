@@ -20,7 +20,7 @@ export const getPlantilla = async (id: string, email: string) => {
 
 export const createPlantilla = async (nombre: string, instrucciones: string, tipo: tipoEjercicio, email: string) => {
 	const db = await connection;
-	return await db.insert(plantilla).values({id: crypto.randomUUID(), nombre, instrucciones, tipo, usuario: email});
+	return await db.insert(plantilla).values({id: crypto.randomUUID(), nombre, instrucciones, tipo, usuario: email}).returning();
 };
 
 export const updatePlantilla = async (id: string, data: {nombre?: string; instrucciones?: string; tipo?: tipoEjercicio}, email: string) => {
@@ -28,10 +28,14 @@ export const updatePlantilla = async (id: string, data: {nombre?: string; instru
 	return await db
 		.update(plantilla)
 		.set(data)
-		.where(and(eq(plantilla.id, id), eq(plantilla.usuario, email)));
+		.where(and(eq(plantilla.id, id), eq(plantilla.usuario, email)))
+		.returning();
 };
 
 export const deletePlantilla = async (id: string, email: string) => {
 	const db = await connection;
-	return await db.delete(plantilla).where(and(eq(plantilla.id, id), eq(plantilla.usuario, email)));
+	return await db
+		.delete(plantilla)
+		.where(and(eq(plantilla.id, id), eq(plantilla.usuario, email)))
+		.returning();
 };

@@ -10,8 +10,8 @@ router.get("/:id", plantillaController.getPlantilla);
 
 router.post("/", plantillaController.createPlantilla);
 
-router.put("/", plantillaController.updatePlantilla);
+router.put("/:id", plantillaController.updatePlantilla);
 
-router.delete("/", plantillaController.deletePlantilla);
+router.delete("/:id", plantillaController.deletePlantilla);
 
 export default router;
