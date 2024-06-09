@@ -15,7 +15,8 @@ export default function NewTemplate() {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (!name || !instructions || !type) return;
+		if (!name) return toast.error("Name is required");
+		if (!type) return toast.error("Type is required");
 
 		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla`, {
 			method: "POST",
@@ -26,10 +27,8 @@ export default function NewTemplate() {
 			body: JSON.stringify({nombre: name, instrucciones: instructions, tipo: type})
 		});
 		const data = await res.json();
-		if (!res.ok) {
-			toast.error(toTitleCase(data.message));
-			return;
-		}
+		if (!res.ok) return toast.error(toTitleCase(data.message));
+
 		console.log(data);
 		navigate("/templates");
 	};

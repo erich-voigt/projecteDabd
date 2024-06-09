@@ -33,10 +33,9 @@ export const createPlantilla = async (req: Request, res: Response) => {
 		const tipo = req.body.tipo as tipoEjercicio;
 		const email = req.headers.user as string;
 		if (!nombre) return res.status(400).json({message: "nombre is required"});
-		else if (!instrucciones) return res.status(400).json({message: "instrucciones is required"});
 		else if (!tipo) return res.status(400).json({message: "tipo is required"});
 		else if (!email) return res.status(400).json({message: "email is required"});
-		return res.status(200).json((await plantillaService.createPlantilla(nombre, instrucciones, tipo, email))[0]);
+		return res.status(200).json((await plantillaService.createPlantilla(nombre, instrucciones ?? "", tipo, email))[0]);
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({message: error});

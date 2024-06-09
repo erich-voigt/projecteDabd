@@ -14,7 +14,8 @@ export default function Register() {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (!email || !password) return;
+		if (!email) return toast.error("Email is required");
+		if (!password) return toast.error("Password is required");
 
 		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/auth/register`, {
 			method: "POST",
@@ -24,10 +25,8 @@ export default function Register() {
 			body: JSON.stringify({email, password})
 		});
 		const data = await res.json();
-		if (!res.ok) {
-			toast.error(toTitleCase(data.message));
-			return;
-		}
+		if (!res.ok) return toast.error(toTitleCase(data.message));
+
 		console.log(data);
 		login(data.email);
 		navigate("/");
@@ -40,7 +39,7 @@ export default function Register() {
 				<div className="flex flex-col md:flex-row justify-between gap-4">
 					<label className="flex flex-col text-zinc-900 w-full">
 						<span className="font-semibold text-lg mb-2">Email</span>
-						<input className="px-3 py-2 rounded-lg font-medium bg-zinc-200 border-[2px] border-zinc-900" placeholder="user@example.com" type="text" onChange={event => setEmail(event.target.value)} value={email} />
+						<input className="px-3 py-2 rounded-lg font-medium bg-zinc-200 border-[2px] border-zinc-900" placeholder="user@example.com" type="email" onChange={event => setEmail(event.target.value)} value={email} />
 					</label>
 					<label className="flex flex-col text-zinc-900 w-full">
 						<span className="font-semibold text-lg mb-2">Password</span>

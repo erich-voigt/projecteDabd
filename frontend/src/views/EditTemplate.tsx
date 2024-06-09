@@ -24,10 +24,8 @@ export default function EditTemplate() {
 				}
 			});
 			const data = await res.json();
-			if (!res.ok) {
-				toast.error(toTitleCase(data.message));
-				return;
-			}
+			if (!res.ok) return toast.error(toTitleCase(data.message));
+
 			console.log(data);
 			const plantilla = data.plantilla_ejercicio;
 			setName(plantilla.nombre);
@@ -41,8 +39,6 @@ export default function EditTemplate() {
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
-		if (!name || !instructions || !type) return;
 
 		const body: any = {};
 
@@ -59,10 +55,8 @@ export default function EditTemplate() {
 			body: JSON.stringify(body)
 		});
 		const data = await res.json();
-		if (!res.ok) {
-			toast.error(toTitleCase(data.message));
-			return;
-		}
+		if (!res.ok) return toast.error(toTitleCase(data.message));
+
 		console.log(data);
 		navigate("/templates");
 	};

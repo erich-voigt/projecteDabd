@@ -36,10 +36,8 @@ export default function Templates() {
 			}
 		});
 		const data = await res.json();
-		if (!res.ok) {
-			toast.error(toTitleCase(data.message));
-			return;
-		}
+		if (!res.ok) return toast.error(toTitleCase(data.message));
+
 		console.log(data);
 		window.location.reload();
 	};

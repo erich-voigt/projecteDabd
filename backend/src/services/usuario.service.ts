@@ -2,6 +2,11 @@ import connection from "@/config/database";
 import {usuario} from "@/models/usuario.model";
 import {and, eq} from "drizzle-orm";
 
+export const getUser = async (email: string) => {
+	const db = await connection;
+	return await db.select({email: usuario.email}).from(usuario).where(eq(usuario.email, email)).limit(1);
+};
+
 export const login = async (email: string, contrasenya: string) => {
 	const db = await connection;
 	return await db
