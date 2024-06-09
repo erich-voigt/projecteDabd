@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+	<path
+		d="M173.346 254.75a1.886 1.886 0 0 1-1.886 1.885 1.886 1.886 0 0 1-1.886-1.886 1.886 1.886 0 0 1 1.886-1.886 1.886 1.886 0 0 1 1.886 1.886z"
+		style="fill:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
+		transform="matrix(30.65212 0 0 30.65212 -4914.798 -7723.09)" />
+	<path
+		d="M175.107 256.13a.926.926 0 0 0-.654.272l-3.092 3.092-3.093-3.092a.926.926 0 0 0-1.309 0l-3.748 3.748a.926.926 0 0 0 0 1.309.926.926 0 0 0 1.31 0l3.092-3.092 3.092 3.092a.926.926 0 0 0 1.31 0l3.747-3.746a.926.926 0 0 0 0-1.31.926.926 0 0 0-.655-.272z"
+		style="fill:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
+		transform="matrix(30.65212 0 0 30.65212 -4914.798 -7723.09)" />
+	<path
+		d="m166.959 260.844-5.336 5.336a.926.926 0 0 0 0 1.308.926.926 0 0 0 1.31 0l4.68-4.68 2.438 2.44-.932.932a.926.926 0 0 0 0 1.308.926.926 0 0 0 1.309 0l1.588-1.586a.926.926 0 0 0 0-1.31l-3.748-3.748a.926.926 0 0 0-1.309 0z"
+		style="fill:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
+		transform="matrix(30.65212 0 0 30.65212 -4914.798 -7723.09)" />
+	<style>
+		svg {
+		color: #000;
+		}
+
+		@media (prefers-color-scheme: dark) {
+		svg {
+		color: #fff;
+		}
+		}
+	</style>
+</svg>

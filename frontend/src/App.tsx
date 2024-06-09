@@ -1,33 +1,42 @@
 import {useEffect, useState} from "react";
-import PlantillaCard from "./components/PlantillaCard";
+import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
+import Header from "./components/Header";
+import useStore from "./store/useStore";
+import EditTemplate from "./views/EditTemplate";
+import Home from "./views/Home";
+import Login from "./views/Login";
+import NewTemplate from "./views/NewTemplate";
+import Register from "./views/Register";
+import Templates from "./views/Templates";
+import Workouts from "./views/Workouts";
 
 export default function App() {
+	const {email, getEmail} = useStore();
+
 	const [loading, setLoading] = useState(true);
-	const [plantillas, setPlantillas] = useState<Plantilla[]>([]);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const res = await fetch("http://localhost:3000/api/plantilla?email=demo@test.com");
-			const data = await res.json();
-			setPlantillas(data);
-			console.log(data);
-			setLoading(false);
-		};
-
-		fetchData();
+		getEmail();
+		setLoading(false);
 	}, []);
 
-	if (loading) return <h1>Loading...</h1>;
-
-	return (
-		<div className="min-h-dvh px-10 pt-8 bg-stone-50">
-			<h1 className="text-4xl font-semibold mb-6">Plantillas</h1>
-			<div className="mx-auto grid place-content-center grid-cols-[repeat(auto-fit,minmax(300px,600px))] gap-6">
-				{plantillas.map(plantilla => {
-					const {id, instrucciones, nombre, tipo, usuario} = plantilla.plantilla_ejercicio;
-					return <PlantillaCard key={id} id={id} instrucciones={instrucciones} nombre={nombre} tipo={tipo} usuario={usuario} />;
-				})}
-			</div>
-		</div>
-	);
+	if (!loading) {
+		return (
+			<HashRouter>
+				<main>
+					<Header />
+					<div>
+						<Routes>
+							<Route path="/" element={email ? <Workouts /> : <Home />} />
+							<Route path="/templates" element={email ? <Templates /> : <Navigate to="/" />} />
+							<Route path="/template/new" element={email ? <NewTemplate /> : <Navigate to="/" />} />
+							<Route path="/template/edit/:id" element={email ? <EditTemplate /> : <Navigate to="/" />} />
+							<Route path="/login" element={email ? <Navigate to="/" /> : <Login />} />
+							<Route path="/register" element={email ? <Navigate to="/" /> : <Register />} />
+						</Routes>
+					</div>
+				</main>
+			</HashRouter>
+		);
+	}
 }

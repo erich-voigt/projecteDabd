@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	font-family: "Work Sans", sans-serif;
+	@apply text-zinc-200;
+	@apply bg-zinc-900;
+}
+
+* {
+	@apply outline-none;
+}
