@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
+import {Toaster} from "sonner";
 import Header from "./components/Header";
 import useStore from "./store/useStore";
 import EditTemplate from "./views/EditTemplate";
@@ -25,16 +26,15 @@ export default function App() {
 			<HashRouter>
 				<main>
 					<Header />
-					<div>
-						<Routes>
-							<Route path="/" element={email ? <Workouts /> : <Home />} />
-							<Route path="/templates" element={email ? <Templates /> : <Navigate to="/" />} />
-							<Route path="/template/new" element={email ? <NewTemplate /> : <Navigate to="/" />} />
-							<Route path="/template/edit/:id" element={email ? <EditTemplate /> : <Navigate to="/" />} />
-							<Route path="/login" element={email ? <Navigate to="/" /> : <Login />} />
-							<Route path="/register" element={email ? <Navigate to="/" /> : <Register />} />
-						</Routes>
-					</div>
+					<Toaster position="bottom-right" />
+					<Routes>
+						<Route path="/" element={email ? <Workouts /> : <Home />} />
+						<Route path="/templates" element={email ? <Templates /> : <Navigate to="/" />} />
+						<Route path="/template/new" element={email ? <NewTemplate /> : <Navigate to="/" />} />
+						<Route path="/template/edit/:id" element={email ? <EditTemplate /> : <Navigate to="/" />} />
+						<Route path="/login" element={email ? <Navigate to="/" /> : <Login />} />
+						<Route path="/register" element={email ? <Navigate to="/" /> : <Register />} />
+					</Routes>
 				</main>
 			</HashRouter>
 		);

@@ -1,6 +1,8 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {toast} from "sonner";
 import useStore from "../store/useStore";
+import {toTitleCase} from "../utils/utils";
 
 export default function Login() {
 	const {login} = useStore();
@@ -14,15 +16,18 @@ export default function Login() {
 
 		if (!email || !password) return;
 
-		const res = await fetch("http://localhost:3000/api/auth/login", {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/auth/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({email, password})
 		});
-		if (!res.ok) return;
 		const data = await res.json();
+		if (!res.ok) {
+			toast.error(toTitleCase(data.message));
+			return;
+		}
 		console.log(data);
 		login(data.email);
 		navigate("/");

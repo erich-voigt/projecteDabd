@@ -1,6 +1,8 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {toast} from "sonner";
 import useStore from "../store/useStore";
+import {toTitleCase} from "../utils/utils";
 
 export default function NewTemplate() {
 	const {email} = useStore();
@@ -15,7 +17,7 @@ export default function NewTemplate() {
 
 		if (!name || !instructions || !type) return;
 
-		const res = await fetch("http://localhost:3000/api/plantilla", {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -23,8 +25,11 @@ export default function NewTemplate() {
 			},
 			body: JSON.stringify({nombre: name, instrucciones: instructions, tipo: type})
 		});
-		if (!res.ok) return;
 		const data = await res.json();
+		if (!res.ok) {
+			toast.error(toTitleCase(data.message));
+			return;
+		}
 		console.log(data);
 		navigate("/templates");
 	};

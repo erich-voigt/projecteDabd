@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS lista_inicial_plantilla_ejercicio (
 
 CREATE TABLE IF NOT EXISTS entrenamiento (
 	id UUID PRIMARY KEY NOT NULL,
-	fecha_inicio DATE NOT NULL,
-	fecha_fin DATE, --reciently changed not yep applied to the actual database
+	fecha_inicio DATE,
+	fecha_fin DATE,
 	usuario VARCHAR(255) NOT NULL REFERENCES usuario(email)
 );
 

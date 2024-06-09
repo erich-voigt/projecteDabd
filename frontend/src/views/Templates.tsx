@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import {toast} from "sonner";
 import TemplateCard from "../components/TemplateCard";
 import useStore from "../store/useStore";
+import {toTitleCase} from "../utils/utils";
 
 export default function Templates() {
 	const {email} = useStore();
@@ -10,7 +12,7 @@ export default function Templates() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const res = await fetch("http://localhost:3000/api/plantilla", {
+			const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla`, {
 				headers: {
 					"Content-Type": "application/json",
 					"user": email!
@@ -26,15 +28,18 @@ export default function Templates() {
 
 	const handleDelete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
 		event.preventDefault();
-		const res = await fetch(`http://localhost:3000/api/plantilla/${id}`, {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla/${id}`, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
 				"user": email!
 			}
 		});
-		if (!res.ok) return;
-		const data = res.json();
+		const data = await res.json();
+		if (!res.ok) {
+			toast.error(toTitleCase(data.message));
+			return;
+		}
 		console.log(data);
 		window.location.reload();
 	};

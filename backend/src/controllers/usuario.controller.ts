@@ -13,6 +13,7 @@ export const login = async (req: Request, res: Response) => {
 		if (user === null || user.length === 0) return res.status(404).json({message: "user not found"});
 		return res.status(200).json(user[0]);
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: error});
 	}
 };
@@ -27,6 +28,7 @@ export const register = async (req: Request, res: Response) => {
 		if (user === null || user.length === 0) return res.status(404).json({message: "failed to register"});
 		return res.status(200).json(user[0]);
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: error});
 	}
 };

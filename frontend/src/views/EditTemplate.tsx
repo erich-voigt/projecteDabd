@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
+import {toast} from "sonner";
 import useStore from "../store/useStore";
+import {toTitleCase} from "../utils/utils";
 
 export default function EditTemplate() {
 	const {email} = useStore();
@@ -14,19 +16,23 @@ export default function EditTemplate() {
 
 	useEffect(() => {
 		const fetchTemplate = async () => {
-			const res = await fetch(`http://localhost:3000/api/plantilla/${id}`, {
+			const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla/${id}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 					"user": email!
 				}
 			});
-			if (!res.ok) return;
-			const {plantilla_ejercicio: data} = await res.json();
+			const data = await res.json();
+			if (!res.ok) {
+				toast.error(toTitleCase(data.message));
+				return;
+			}
 			console.log(data);
-			setName(data.nombre);
-			setInstructions(data.instrucciones);
-			setType(data.tipo);
+			const plantilla = data.plantilla_ejercicio;
+			setName(plantilla.nombre);
+			setInstructions(plantilla.instrucciones);
+			setType(plantilla.tipo);
 			setLoading(false);
 		};
 
@@ -44,7 +50,7 @@ export default function EditTemplate() {
 		if (instructions !== "") body["instrucciones"] = instructions;
 		if (type !== "") body["tipo"] = type;
 
-		const res = await fetch(`http://localhost:3000/api/plantilla/${id}`, {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla/${id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -52,8 +58,11 @@ export default function EditTemplate() {
 			},
 			body: JSON.stringify(body)
 		});
-		if (!res.ok) return;
 		const data = await res.json();
+		if (!res.ok) {
+			toast.error(toTitleCase(data.message));
+			return;
+		}
 		console.log(data);
 		navigate("/templates");
 	};
