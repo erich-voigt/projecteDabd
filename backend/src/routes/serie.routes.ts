@@ -1,15 +1,17 @@
 import {Router} from "express";
 
+import * as serieController from "@/controllers/serie.controller";
+
 const router = Router();
 
-router.get("/");
+router.get("/", serieController.getSeries);
 
-router.get("/:id");
+router.get("/:id", serieController.getSerie);
 
-router.post("/");
+router.post("/", serieController.createSerie);
 
-router.put("/");
+router.put("/", serieController.updateSerie);
 
-router.delete("/");
+router.delete("/", serieController.deleteSerie);
 
 export default router;
