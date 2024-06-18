@@ -27,10 +27,10 @@ export default function EditTemplate() {
 			if (!res.ok) return toast.error(toTitleCase(data.message));
 
 			console.log(data);
-			const plantilla = data.plantilla_ejercicio;
-			setName(plantilla.nombre);
-			setInstructions(plantilla.instrucciones);
-			setType(plantilla.tipo);
+			const template = data.plantilla_ejercicio;
+			setName(template.nombre);
+			setInstructions(template.instrucciones);
+			setType(template.tipo);
 			setLoading(false);
 		};
 

@@ -11,3 +11,19 @@ body {
 * {
 	@apply outline-none;
 }
+
+::-webkit-scrollbar {
+	@apply w-3;
+}
+
+::-webkit-scrollbar-track {
+	@apply bg-zinc-900;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply bg-zinc-600;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	@apply bg-lime-400;
+}

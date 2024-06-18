@@ -8,7 +8,7 @@ import {toTitleCase} from "../utils/utils";
 export default function Templates() {
 	const {email} = useStore();
 
-	const [plantillas, setPlantillas] = useState<Plantilla[]>([]);
+	const [templates, setTemplates] = useState<Template[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -19,7 +19,7 @@ export default function Templates() {
 				}
 			});
 			const data = await res.json();
-			setPlantillas(data);
+			setTemplates(data);
 			console.log(data);
 		};
 
@@ -62,8 +62,8 @@ export default function Templates() {
 					</Link>
 				</div>
 				<div className="w-full h-full mx-auto grid place-content-center grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-2">
-					{plantillas.map(plantilla => {
-						const {id, instrucciones, nombre, tipo, usuario} = plantilla.plantilla_ejercicio;
+					{templates.map(template => {
+						const {id, instrucciones, nombre, tipo, usuario} = template.plantilla_ejercicio;
 						return <TemplateCard key={id} id={id} instrucciones={instrucciones} nombre={nombre} tipo={tipo} usuario={usuario} handleDelete={handleDelete} />;
 					})}
 				</div>

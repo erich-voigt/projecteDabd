@@ -1,4 +1,4 @@
-interface Plantilla {
+interface Template {
 	plantilla_ejercicio: {
 		id: string;
 		instrucciones: string;

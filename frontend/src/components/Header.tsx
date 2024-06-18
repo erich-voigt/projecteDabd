@@ -7,8 +7,10 @@ export default function Header() {
 	return (
 		<div className="flex justify-center items-center">
 			<header className="fixed z-50 bg-zinc-900 max-w-[1800px] w-full h-24 px-8 md:px-16 flex justify-center sm:justify-between items-center gap-8">
-				<Link to="/">
-					<h1 className="max-sm:hidden text-3xl font-semibold">EzyFit</h1>
+				<Link className="max-sm:hidden" to="/">
+					<h1 className="text-3xl font-semibold">
+						Ezy<span className="text-lime-400">Fit</span>
+					</h1>
 				</Link>
 				<nav>
 					<ul className="flex justify-between items-center gap-6 sm:gap-12">
