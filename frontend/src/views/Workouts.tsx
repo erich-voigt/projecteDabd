@@ -11,8 +11,10 @@ export default function Workouts() {
 
 	const [workouts, setWorkouts] = useState<ReceivedWorkout[]>([]);
 	const [graphData, setGraphData] = useState<{months: string[]; values: number[]}>({months: [], values: []});
+	const [refetch, setRefetch] = useState(true);
 
 	useEffect(() => {
+		if (!refetch) return;
 		const fetchData = async () => {
 			let res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/entrenamiento`, {
 				headers: {
@@ -41,7 +43,8 @@ export default function Workouts() {
 		};
 
 		fetchData();
-	}, []);
+		setRefetch(false);
+	}, [refetch]);
 
 	const handleCreateWorkout = async () => {
 		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/entrenamiento`, {
@@ -72,6 +75,7 @@ export default function Workouts() {
 
 		console.log(data);
 		setWorkouts(prevWorkouts => prevWorkouts.filter(workout => workout.entrenamiento.id !== id));
+		setRefetch(true);
 	};
 
 	return (

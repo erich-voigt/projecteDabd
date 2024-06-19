@@ -7,25 +7,25 @@ export const getGraph = async (email: string) => {
 	const db = await connection;
 	let res = await db.execute(sql`
 		WITH months AS (
-			SELECT 
+			SELECT
 				generate_series(
 					DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 year'),
 					DATE_TRUNC('month', CURRENT_DATE),
 					'1 month'::interval
 				) AS month
 		)
-		SELECT 
+		SELECT
 			months.month,
 			COUNT(entrenamiento.fecha_inicio) AS count
-		FROM 
+		FROM
 			months
-		LEFT JOIN 
+		LEFT JOIN
 			entrenamiento
-		ON 
+		ON
 			DATE_TRUNC('month', entrenamiento.fecha_inicio) = months.month AND entrenamiento.usuario = ${email}
-		GROUP BY 
+		GROUP BY
 			months.month
-		ORDER BY 
+		ORDER BY
 			months.month;
 	`);
 	if (res.rows.length !== 13) throw new Error("error getting data");
@@ -38,7 +38,6 @@ export const getGraph = async (email: string) => {
 		data.months.push(months[new Date(res.rows[i].month as string).getMonth()]);
 		data.values.push(parseInt(res.rows[i].count as string));
 	}
-	console.log(data);
 	return data;
 };
 
