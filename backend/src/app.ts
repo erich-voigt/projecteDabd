@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import morgan from "morgan";
 
 import ejercicioRoutes from "@/routes/ejercicio.routes";
 import entrenamientoRoutes from "@/routes/entrenamiento.routes";
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
 app.use("/api/plantilla", plantillaRoutes);
 app.use("/api/entrenamiento", entrenamientoRoutes);

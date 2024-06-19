@@ -65,3 +65,11 @@ export const deleteEntrenamiento = async (req: Request, res: Response) => {
 		return res.status(500).json({message: error});
 	}
 };
+
+export const graphEntrenamiento = async (req: Request, res: Response) => {
+	try {
+		return res.status(200).json(await entrenamientoService.graphEntrenamiento());
+	} catch (error) {
+		return res.status(500).json({message: error});
+	}
+};

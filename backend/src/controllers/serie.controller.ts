@@ -24,8 +24,12 @@ export const getSerie = async (req: Request, res: Response) => {
 export const createSerie = async (req: Request, res: Response) => {
 	try {
 		const ejercicioId = req.query.ejercicio as string;
+		const value1 = req.query.value1 as string;
+		const value2 = req.query.value2 as string;
 		if (!ejercicioId) return res.status(400).json({message: "ejercicio is required"});
-		return res.status(200).json(await serieService.createSerie(ejercicioId));
+		if (!value1) return res.status(400).json({message: "value1 is required"});
+		if (!value2) return res.status(400).json({message: "value2 is required"});
+		return res.status(200).json(await serieService.createSerie(ejercicioId, Number(value1), Number(value2)));
 	} catch (error) {
 		return res.status(500).json(error);
 	}
