@@ -18,7 +18,7 @@ export const getSeries = async (ejercicioId: string) => {
 	} else {
 		data = await db.select({serieID: serie.id, fin: serie.finalizada, distancia: cardio.distancia, tiempo: cardio.tiempo}).from(cardio).leftJoin(serie, eq(cardio.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
 	}
-	return {data, tipo: specialitzation[0].tipo};
+	return {data: data, tipo: specialitzation[0].tipo};
 };
 
 export const getSerie = async (id: string) => {
@@ -37,7 +37,7 @@ export const getSerie = async (id: string) => {
 	} else {
 		data = await db.select().from(cardio).where(eq(cardio.serie, id));
 	}
-	return {serie: result, data, tipo: specialitzation[0].tipo};
+	return {serie: result, data: data[0], tipo: specialitzation[0].tipo};
 };
 
 export const createSerie = async (ejercicioId: string, value1: number, value2: number) => {
@@ -57,15 +57,28 @@ export const createSerie = async (ejercicioId: string, value1: number, value2: n
 		data = await db.insert(cardio).values({serie: result[0].serieID, distancia: value1, tiempo: value2}).returning();
 	}
 
-	return data;
+	return {serie: result, data: data[0], tipo: specialitzation[0].tipo};
 };
 
-export const updateSerie = async (id: string, finalizada: boolean) => {
+export const updateSerie = async (id: string, update: {value1?: number; value2?: number}, finalizada?: boolean) => {
 	const db = await connection;
-	return await db.update(serie).set({finalizada}).where(eq(serie.id, id));
+	const result = await db.update(serie).set({finalizada}).where(eq(serie.id, id)).returning();
+
+	const specialitzation = await db.select({tipo: plantilla.tipo}).from(plantilla).leftJoin(ejercicio, eq(plantilla.id, ejercicio.plantilla)).leftJoin(serie, eq(ejercicio.id, serie.ejercicio)).where(eq(serie.id, id));
+
+	let data: any;
+	if (specialitzation[0].tipo == "repeticiones") {
+		data = await db.update(repeticiones).set(data).where(eq(repeticiones.serie, id));
+	} else if (specialitzation[0].tipo == "cronometrado") {
+		data = await db.update(cronometrado).set(data).where(eq(cronometrado.serie, id));
+	} else {
+		data = await db.update(cardio).set(data).where(eq(cardio.serie, id));
+	}
+
+	return {serie: result, data: data[0], tipo: specialitzation[0].tipo};
 };
 
 export const deleteSerie = async (id: string) => {
 	const db = await connection;
-	return await db.delete(serie).where(eq(serie.id, id));
+	return await db.delete(serie).where(eq(serie.id, id)).returning();
 };
