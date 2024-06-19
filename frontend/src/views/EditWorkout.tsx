@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {toast} from "sonner";
-// import Exercise from "../components/Exercise";
+import Exercise from "../components/Exercise";
 import useStore from "../store/useStore";
 import {toTitleCase} from "../utils/utils";
 
@@ -13,69 +13,72 @@ export default function EditWorkout() {
 	const [workout, setWorkout] = useState<ReceivedWorkout>();
 	const [exercises, setExercises] = useState<ReceivedExercise[]>([]);
 	const [templates, setTemplates] = useState<ReceivedTemplate[]>([]);
+	const [refetch, setRefetch] = useState(true);
 
 	useEffect(() => {
+		if (!refetch) return;
 		const fetchData = async () => {
-			let res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/entrenamiento/${id}`, {
+			let resWorkout = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/entrenamiento/${id}`, {
 				headers: {
 					"Content-Type": "application/json",
 					"user": email!
 				}
 			});
-			let data = await res.json();
-			setWorkout(data);
-			console.log(data);
+			let dataWorkout = await resWorkout.json();
+			setWorkout(dataWorkout);
+			console.log(dataWorkout);
 
-			res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla`, {
+			const resExercise = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/ejercicio?entrenamiento=${id}`, {
 				headers: {
 					"Content-Type": "application/json",
 					"user": email!
 				}
 			});
-			data = await res.json();
-			setTemplates(data);
-			console.log(data);
+			const dataExercise = await resExercise.json();
+			setExercises(dataExercise);
+			console.log(dataExercise);
+
+			const resTemplate = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/plantilla`, {
+				headers: {
+					"Content-Type": "application/json",
+					"user": email!
+				}
+			});
+			let dataTemplate = await resTemplate.json();
+			dataTemplate = dataTemplate.filter((template: ReceivedTemplate) => !dataExercise.some((exercise: ReceivedExercise) => exercise.plantilla_ejercicio.id === template.plantilla_ejercicio.id));
+			setTemplates(dataTemplate);
+			console.log(dataTemplate);
 		};
 
 		fetchData();
-	}, []);
+		setRefetch(false);
+	}, [refetch]);
 
-	const handleAddTemplate = (template: ReceivedTemplate) => {
-		let exercise: ReceivedExercise = {
-			name: template.plantilla_ejercicio.nombre,
-			type: template.plantilla_ejercicio.tipo,
-			sets: [],
-			template: template
-		};
-		if (template.plantilla_ejercicio.tipo === "repeticiones") {
-			exercise.sets.push({
-				type: template.plantilla_ejercicio.tipo,
-				finished: false,
-				repetitions: 0,
-				weight: 0
-			});
-		} else if (template.plantilla_ejercicio.tipo === "cronometrado") {
-			exercise.sets.push({
-				type: template.plantilla_ejercicio.tipo,
-				finished: false,
-				time: 0,
-				weight: 0
-			});
-		} else if (template.plantilla_ejercicio.tipo === "cardio") {
-			exercise.sets.push({
-				type: template.plantilla_ejercicio.tipo,
-				finished: false,
-				time: 0,
-				distance: 0
-			});
-		}
-		setExercises(prevExercises => [...prevExercises, exercise]);
-		setTemplates(prevTemplates => prevTemplates.filter(t => t.plantilla_ejercicio.id !== template.plantilla_ejercicio.id));
+	const handleAddTemplate = async (template: ReceivedTemplate) => {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/ejercicio`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"user": email!
+			},
+			body: JSON.stringify({plantilla: template.plantilla_ejercicio.id, entrenamiento: id})
+		});
+		const data = await res.json();
+		setRefetch(true);
+		console.log(data);
 	};
 
-	const handleRemoveExercise = (exercise: ReceivedExercise) => {
-		setTemplates(prevTemplates => [...prevTemplates, exercise.template]);
-		setExercises(prevExercises => prevExercises.filter(e => e.template.plantilla_ejercicio.id !== exercise.template.plantilla_ejercicio.id));
+	const handleRemoveExercise = async (exercise: ReceivedExercise) => {
+		const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_PATH}/ejercicio/${exercise.ejercicio_en_curso.id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				"user": email!
+			}
+		});
+		const data = await res.json();
+		setRefetch(true);
+		console.log(data);
 	};
 
 	const handleFinishWorkout = async () => {
@@ -137,9 +140,9 @@ export default function EditWorkout() {
 				</div>
 				<h1 className="uppercase text-3xl font-semibold my-4">Your Exercises</h1>
 				<div className="grid place-content-center grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-4">
-					{/* {exercises.map((exercise, index) => (
-						<Exercise key={index} exercise={exercise} handleRemoveExercise={handleRemoveExercise} />
-					))} */}
+					{exercises.map((exercise, index) => (
+						<Exercise key={index} exercise={exercise} refetch={refetch} setRefetch={setRefetch} handleRemoveExercise={handleRemoveExercise} />
+					))}
 				</div>
 			</div>
 		</section>

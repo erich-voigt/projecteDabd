@@ -23,13 +23,13 @@ export const getSerie = async (req: Request, res: Response) => {
 
 export const createSerie = async (req: Request, res: Response) => {
 	try {
-		const ejercicioId = req.query.ejercicio as string;
-		const value1 = req.query.value1 as string;
-		const value2 = req.query.value2 as string;
+		const ejercicioId = req.body.ejercicio as string;
+		const value1 = req.body.value1 as number;
+		const value2 = req.body.value2 as number;
 		if (!ejercicioId) return res.status(400).json({message: "ejercicio is required"});
-		if (!value1) return res.status(400).json({message: "value1 is required"});
-		if (!value2) return res.status(400).json({message: "value2 is required"});
-		return res.status(200).json(await serieService.createSerie(ejercicioId, Number(value1), Number(value2)));
+		else if (value1 ?? false) return res.status(400).json({message: "value1 is required"});
+		else if (value2 ?? false) return res.status(400).json({message: "value2 is required"});
+		return res.status(200).json(await serieService.createSerie(ejercicioId, value1, value2));
 	} catch (error) {
 		return res.status(500).json(error);
 	}
@@ -38,10 +38,14 @@ export const createSerie = async (req: Request, res: Response) => {
 export const updateSerie = async (req: Request, res: Response) => {
 	try {
 		const id = req.params.id as string;
-		const finalizada = req.query.finalizada === "true";
+		let finalizada = req.body.finalizada;
+		if (finalizada !== null || finalizada !== undefined) finalizada = finalizada === "true";
+		let value1 = req.body.value1;
+		if (value1 !== null || value1 !== undefined) value1 = parseInt(value1);
+		let value2 = req.body.value2;
+		if (value2 !== null || value2 !== undefined) value2 = parseInt(value2);
 		if (!id) return res.status(400).json({message: "id is required"});
-		else if (!finalizada) return res.status(400).json({message: "finalizada is required"});
-		return res.status(200).json(await serieService.updateSerie(id, finalizada));
+		return res.status(200).json(await serieService.updateSerie(id, {value1, value2}, finalizada));
 	} catch (error) {
 		return res.status(500).json({message: error});
 	}
@@ -51,7 +55,7 @@ export const deleteSerie = async (req: Request, res: Response) => {
 	try {
 		const id = req.params.id as string;
 		if (!id) return res.status(400).json({message: "id is required"});
-		return res.status(400).json(await serieService.deleteSerie(id));
+		return res.status(200).json((await serieService.deleteSerie(id))[0]);
 	} catch (error) {
 		return res.status(500).json({message: error});
 	}

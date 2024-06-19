@@ -68,11 +68,11 @@ export const updateSerie = async (id: string, update: {value1?: number; value2?:
 
 	let data: any;
 	if (specialitzation[0].tipo == "repeticiones") {
-		data = await db.update(repeticiones).set(data).where(eq(repeticiones.serie, id));
+		data = await db.update(repeticiones).set(data).where(eq(repeticiones.serie, id)).returning();
 	} else if (specialitzation[0].tipo == "cronometrado") {
-		data = await db.update(cronometrado).set(data).where(eq(cronometrado.serie, id));
+		data = await db.update(cronometrado).set(data).where(eq(cronometrado.serie, id)).returning();
 	} else {
-		data = await db.update(cardio).set(data).where(eq(cardio.serie, id));
+		data = await db.update(cardio).set(data).where(eq(cardio.serie, id)).returning();
 	}
 
 	return {serie: result, data: data[0], tipo: specialitzation[0].tipo};
