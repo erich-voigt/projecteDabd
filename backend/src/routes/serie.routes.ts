@@ -10,8 +10,8 @@ router.get("/:id", serieController.getSerie);
 
 router.post("/", serieController.createSerie);
 
-router.put("/", serieController.updateSerie);
+router.put("/:id", serieController.updateSerie);
 
-router.delete("/", serieController.deleteSerie);
+router.delete("/:id", serieController.deleteSerie);
 
 export default router;

@@ -1,4 +1,4 @@
-interface Template {
+interface ReceivedTemplate {
 	plantilla_ejercicio: {
 		id: string;
 		instrucciones: string;

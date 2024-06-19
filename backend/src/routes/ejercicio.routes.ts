@@ -10,8 +10,8 @@ router.get("/:id", ejercicioController.getEjercicio);
 
 router.post("/", ejercicioController.createEjercicio);
 
-router.put("/", ejercicioController.updateEjercicio);
+router.put("/:id", ejercicioController.updateEjercicio);
 
-router.delete("/", ejercicioController.deleteEjercicio);
+router.delete("/:id", ejercicioController.deleteEjercicio);
 
 export default router;

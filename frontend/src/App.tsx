@@ -4,6 +4,7 @@ import {Toaster} from "sonner";
 import Header from "./components/Header";
 import useStore from "./store/useStore";
 import EditTemplate from "./views/EditTemplate";
+import EditWorkout from "./views/EditWorkout";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import NewTemplate from "./views/NewTemplate";
@@ -29,6 +30,7 @@ export default function App() {
 					<Toaster position="bottom-right" />
 					<Routes>
 						<Route path="/" element={email ? <Workouts /> : <Home />} />
+						<Route path="/workout/:id" element={email ? <EditWorkout /> : <Home />} />
 						<Route path="/templates" element={email ? <Templates /> : <Navigate to="/" />} />
 						<Route path="/template/new" element={email ? <NewTemplate /> : <Navigate to="/" />} />
 						<Route path="/template/edit/:id" element={email ? <EditTemplate /> : <Navigate to="/" />} />

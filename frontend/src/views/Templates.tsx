@@ -8,7 +8,7 @@ import {toTitleCase} from "../utils/utils";
 export default function Templates() {
 	const {email} = useStore();
 
-	const [templates, setTemplates] = useState<Template[]>([]);
+	const [templates, setTemplates] = useState<ReceivedTemplate[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
