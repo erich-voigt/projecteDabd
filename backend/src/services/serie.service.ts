@@ -14,11 +14,11 @@ export const getSeries = async (ejercicioId: string) => {
 	if (specialitzation[0].tipo == "repeticiones") {
 		data = await db.select({serieID: serie.id, fin: serie.finalizada, peso: repeticiones.peso, repeticiones: repeticiones.repeticiones}).from(repeticiones).leftJoin(serie, eq(repeticiones.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
 	} else if (specialitzation[0].tipo == "cronometrado") {
-		data = await db.select({serieID: serie.id, fin: serie.finalizada, peso: cronometrado.peso, repeticiones: cronometrado.tiempo}).from(cronometrado).leftJoin(serie, eq(cronometrado.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
+		data = await db.select({serieID: serie.id, fin: serie.finalizada, peso: cronometrado.peso, tiempo: cronometrado.tiempo}).from(cronometrado).leftJoin(serie, eq(cronometrado.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
 	} else {
-		data = await db.select({serieID: serie.id, fin: serie.finalizada, repeticiones: cardio.distancia, peso: cardio.tiempo}).from(cardio).leftJoin(serie, eq(cardio.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
+		data = await db.select({serieID: serie.id, fin: serie.finalizada, distancia: cardio.distancia, tiempo: cardio.tiempo}).from(cardio).leftJoin(serie, eq(cardio.serie, serie.id)).leftJoin(ejercicio, eq(serie.ejercicio, ejercicio.id)).where(eq(ejercicio.id, ejercicioId));
 	}
-	return data;
+	return {data, tipo: specialitzation[0].tipo};
 };
 
 export const getSerie = async (id: string) => {
@@ -37,7 +37,7 @@ export const getSerie = async (id: string) => {
 	} else {
 		data = await db.select().from(cardio).where(eq(cardio.serie, id));
 	}
-	return {serie: result, especializacion: data};
+	return {serie: result, data, tipo: specialitzation[0].tipo};
 };
 
 export const createSerie = async (ejercicioId: string, value1: number, value2: number) => {
@@ -50,11 +50,11 @@ export const createSerie = async (ejercicioId: string, value1: number, value2: n
 	//now insert into data into that specialitzation table
 	let data: any;
 	if (specialitzation[0].tipo == "repeticiones") {
-		data = await db.insert(repeticiones).values({serie: result[0].serieID, peso: value1, repeticiones: value2});
+		data = await db.insert(repeticiones).values({serie: result[0].serieID, peso: value1, repeticiones: value2}).returning();
 	} else if (specialitzation[0].tipo == "cronometrado") {
-		data = await db.insert(cronometrado).values({serie: result[0].serieID, peso: value1, tiempo: value2});
+		data = await db.insert(cronometrado).values({serie: result[0].serieID, peso: value1, tiempo: value2}).returning();
 	} else {
-		data = await db.insert(cardio).values({serie: result[0].serieID, distancia: value1, tiempo: value2});
+		data = await db.insert(cardio).values({serie: result[0].serieID, distancia: value1, tiempo: value2}).returning();
 	}
 
 	return data;

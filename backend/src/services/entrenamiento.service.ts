@@ -75,19 +75,3 @@ export const deleteEntrenamiento = async (id: string, email: string) => {
 	const db = await connection;
 	return await db.delete(entrenamiento).where(and(eq(entrenamiento.id, id), eq(entrenamiento.usuario, email)));
 };
-
-export const graphEntrenamiento = async () => {
-	const db = await connection;
-	return await db.execute(sql`
-		SELECT
-			TO_CHAR(fecha_fin, 'YYYY-MM') AS month,
-			COUNT(*) AS entrenamiento_count
-		FROM
-			entrenamiento
-		WHERE
-			fecha_fin >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '11 months'
-		GROUP BY
-			TO_CHAR(fecha_fin, 'YYYY-MM')
-		ORDER BY
-			month;`);
-};
