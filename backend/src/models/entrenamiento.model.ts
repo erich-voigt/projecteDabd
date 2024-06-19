@@ -9,7 +9,7 @@ export const entrenamiento = pgTable("entrenamiento", {
 	fecha_fin: date("fecha_fin"),
 	usuario: varchar("usuario", {length: 255})
 		.notNull()
-		.references(() => usuario.email)
+		.references(() => usuario.email, {onDelete: "cascade", onUpdate: "cascade"})
 });
 
 export const entrenamientoRelations = relations(entrenamiento, ({one, many}) => ({

@@ -7,7 +7,7 @@ export const serie = pgTable("serie", {
 	finalizada: boolean("finalizada").notNull(),
 	ejercicio: uuid("ejercicio")
 		.notNull()
-		.references(() => ejercicio.id)
+		.references(() => ejercicio.id, {onDelete: "cascade", onUpdate: "cascade"})
 });
 
 export const serieRelations = relations(serie, ({one}) => ({
@@ -21,7 +21,7 @@ export const repeticiones = pgTable("repeticiones", {
 	serie: uuid("serie")
 		.primaryKey()
 		.notNull()
-		.references(() => serie.id),
+		.references(() => serie.id, {onDelete: "cascade", onUpdate: "cascade"}),
 	peso: integer("peso").notNull(),
 	repeticiones: integer("repeticiones").notNull()
 });
@@ -37,7 +37,7 @@ export const cronometrado = pgTable("cronometrado", {
 	serie: uuid("serie")
 		.primaryKey()
 		.notNull()
-		.references(() => serie.id),
+		.references(() => serie.id, {onDelete: "cascade", onUpdate: "cascade"}),
 	peso: integer("peso").notNull(),
 	tiempo: integer("tiempo").notNull()
 });
@@ -53,7 +53,7 @@ export const cardio = pgTable("cardio", {
 	serie: uuid("serie")
 		.primaryKey()
 		.notNull()
-		.references(() => serie.id),
+		.references(() => serie.id, {onDelete: "cascade", onUpdate: "cascade"}),
 	distancia: integer("distancia").notNull(),
 	tiempo: integer("tiempo").notNull()
 });

@@ -6,8 +6,6 @@ import {eq} from "drizzle-orm";
 
 export const getSeries = async (ejercicioId: string) => {
 	const db = await connection;
-	//return await db.select().from(serie).where(eq(serie.ejercicio, ejercicioId));
-	//now detect wich specialitzation is this serie using
 	const specialitzation = await db.select({tipo: plantilla.tipo}).from(plantilla).leftJoin(ejercicio, eq(plantilla.id, ejercicio.plantilla)).where(eq(ejercicio.id, ejercicioId));
 
 	let data: any;
@@ -25,10 +23,8 @@ export const getSerie = async (id: string) => {
 	const db = await connection;
 	const result = await db.select().from(serie).where(eq(serie.id, id));
 
-	//now detect wich specialitzation is this serie using
 	const specialitzation = await db.select({tipo: plantilla.tipo}).from(plantilla).leftJoin(ejercicio, eq(plantilla.id, ejercicio.plantilla)).leftJoin(serie, eq(ejercicio.id, serie.ejercicio)).where(eq(serie.id, id));
 
-	//now select the data from the correct specialized table
 	let data: any;
 	if (specialitzation[0].tipo == "repeticiones") {
 		data = await db.select().from(repeticiones).where(eq(repeticiones.serie, id));
@@ -43,11 +39,8 @@ export const getSerie = async (id: string) => {
 export const createSerie = async (ejercicioId: string, value1: number, value2: number) => {
 	const db = await connection;
 	const result = await db.insert(serie).values({id: crypto.randomUUID(), finalizada: false, ejercicio: ejercicioId}).returning({serieID: serie.id});
-
-	//now detect wich specialitzation is this serie using
 	const specialitzation = await db.select({tipo: plantilla.tipo}).from(plantilla).leftJoin(ejercicio, eq(plantilla.id, ejercicio.plantilla)).where(eq(ejercicio.id, ejercicioId));
 
-	//now insert into data into that specialitzation table
 	let data: any;
 	if (specialitzation[0].tipo == "repeticiones") {
 		data = await db.insert(repeticiones).values({serie: result[0].serieID, peso: value1, repeticiones: value2}).returning();
@@ -56,7 +49,6 @@ export const createSerie = async (ejercicioId: string, value1: number, value2: n
 	} else {
 		data = await db.insert(cardio).values({serie: result[0].serieID, distancia: value1, tiempo: value2}).returning();
 	}
-
 	return {serie: result, data: data[0], tipo: specialitzation[0].tipo};
 };
 

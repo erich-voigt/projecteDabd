@@ -17,16 +17,10 @@ export const getGraph = async (email: string) => {
 		SELECT
 			months.month,
 			COUNT(entrenamiento.fecha_inicio) AS count
-		FROM
-			months
-		LEFT JOIN
-			entrenamiento
-		ON
-			DATE_TRUNC('month', entrenamiento.fecha_inicio) = months.month AND entrenamiento.usuario = ${email}
-		GROUP BY
-			months.month
-		ORDER BY
-			months.month;
+		FROM months LEFT JOIN entrenamiento
+		ON DATE_TRUNC('month', entrenamiento.fecha_inicio) = months.month AND entrenamiento.usuario = ${email}
+		GROUP BY months.month
+		ORDER BY months.month;
 	`);
 	if (res.rows.length !== 13) throw new Error("error getting data");
 	const data = {

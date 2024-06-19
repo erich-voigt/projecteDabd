@@ -11,10 +11,10 @@ export const ejercicio = pgTable(
 		finalizado: boolean("finalizado").notNull(),
 		entrenamiento: uuid("entrenamiento")
 			.notNull()
-			.references(() => entrenamiento.id),
+			.references(() => entrenamiento.id, {onDelete: "cascade", onUpdate: "cascade"}),
 		plantilla: uuid("plantilla")
 			.notNull()
-			.references(() => plantilla.id)
+			.references(() => plantilla.id, {onDelete: "restrict", onUpdate: "cascade"})
 	},
 	table => {
 		return {

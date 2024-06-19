@@ -12,7 +12,7 @@ export const plantilla = pgTable("plantilla_ejercicio", {
 	tipo: tipoEjercicioEnum("tipo").notNull(),
 	usuario: varchar("usuario", {length: 255})
 		.notNull()
-		.references(() => usuario.email)
+		.references(() => usuario.email, {onDelete: "cascade", onUpdate: "cascade"})
 });
 
 export const plantillaRelations = relations(plantilla, ({one, many}) => ({
